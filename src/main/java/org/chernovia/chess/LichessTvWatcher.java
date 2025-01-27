@@ -13,7 +13,7 @@ public class LichessTvWatcher extends Thread {
     LichessTvListener2 listener;
     Enums.Channel channel;
 
-    LichessTvWatcher(LichessTvListener2 listener, Enums.Channel channel) {
+    public LichessTvWatcher(LichessTvListener2 listener, Enums.Channel channel) {
         this.listener = listener; this.channel = channel;
     }
 
