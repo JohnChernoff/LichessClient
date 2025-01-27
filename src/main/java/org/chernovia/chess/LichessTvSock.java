@@ -8,14 +8,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 
-public class LichessTVSock extends LichessWebSock {
+public class LichessTvSock extends LichessWebSock {
 
     public static ObjectMapper mapper = new ObjectMapper();
     String id;
     int maxCrowd = 0;
-    LichessTVWatcher watcher;
+    LichessTvListener watcher;
 
-    public LichessTVSock(String id, LichessTVWatcher watcher) throws URISyntaxException {
+    public LichessTvSock(String id, LichessTvListener watcher) throws URISyntaxException {
         super(new URI("wss://socket3.lichess.org/watch/" + id + "/black/v6?sri=" + (int)(Math.random() * 999)));
         this.id = id;
         this.watcher = watcher;
@@ -23,11 +23,11 @@ public class LichessTVSock extends LichessWebSock {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        LichessTVLogger.log2File(Level.FINE,"Watching: " + id);
+        LichessTvLogger.log2File(Level.FINE,"Watching: " + id);
     }
 
     @Override
-    public void onMessage(String message) { //log("received: " + message);
+    public void onMessage(String message) { log("received: " + message);
         try {
             JsonNode node = mapper.readTree(message); //log("Message received: " + node.get("t").textValue());
             JsonNode type = node.get("t");

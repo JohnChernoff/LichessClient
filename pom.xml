@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>org.chernovia</groupId>
     <artifactId>LichessClient</artifactId>
-    <version>0.1.3</version>
+    <version>0.1.5</version>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
@@ -65,7 +65,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.chernovia.chess.LichessTVLogger</mainClass>
+                            <mainClass>org.chernovia.chess.LichessTvLogger</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

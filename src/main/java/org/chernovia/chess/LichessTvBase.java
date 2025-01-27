@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class GameBase {
+public class LichessTvBase {
     public enum GameCrit {avgRating,flux,upset}
     public record GameRec(String id, String pgn) {} //TODO: use PGN class instead of String
     private record Credentials(String uri, String usr, String pwd, String db) {}
     private Connection conn;
     private final Credentials credentials;
 
-    public GameBase(String uri, String usr, String pwd, String db) {
+    public LichessTvBase(String uri, String usr, String pwd, String db) {
         credentials = new Credentials(uri, usr, pwd, db);
         conn = connect(credentials);
     }
@@ -33,7 +33,7 @@ public class GameBase {
                     "&password=" + credentials.pwd;
             return DriverManager.getConnection(connStr);
         } catch (SQLException ex) {
-            LichessTVLogger.log2File(Level.WARNING,"DataBase connection error: " + ex);
+            LichessTvLogger.log2File(Level.WARNING,"DataBase connection error: " + ex);
             return null;
         }
     }
@@ -92,7 +92,7 @@ public class GameBase {
     public List<GameRec> getGames(PreparedStatement ps, int n) throws SQLException {
         Client client = Client.basic();
         List<GameRec> gameList = new ArrayList<>();
-        LichessTVLogger.log("Fetching " + n + " games by: " + ps);
+        LichessTvLogger.log("Fetching " + n + " games by: " + ps);
         ResultSet rs = ps.executeQuery();
         for (int i=0;i<n;i++) {
             if (rs.next()) {
@@ -106,11 +106,11 @@ public class GameBase {
 
     private boolean oopsHandler(SQLException e, boolean retry) {
         if (retry) {
-            LichessTVLogger.log2File(Level.WARNING,"DataBase oops: " + e);
+            LichessTvLogger.log2File(Level.WARNING,"DataBase oops: " + e);
             conn = connect(credentials);
         }
         else {
-            LichessTVLogger.log("DataBase oops: " + e);
+            LichessTvLogger.log("DataBase oops: " + e);
         }
         return (conn != null);
     }

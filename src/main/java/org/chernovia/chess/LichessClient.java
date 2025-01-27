@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-abstract public class LichessClient implements LichessTVWatcher {
+abstract public class LichessClient implements LichessTvListener {
     public String getClientID() {
         return clientID;
     }
@@ -46,10 +46,10 @@ abstract public class LichessClient implements LichessTVWatcher {
 
     String clientID;
     Client client;
-    Map<String, LichessTVSock> tvClients = new HashMap<>();
+    Map<String, LichessTvSock> tvClients = new HashMap<>();
     Enums.Channel currentChannel = Enums.Channel.blitz;
     long lastPurge = System.currentTimeMillis();
-    static Logger logger = Logger.getLogger(LichessTVLogger.class.getName());
+    static Logger logger = Logger.getLogger(LichessTvLogger.class.getName());
     static FileHandler logFileHandler;
     static File logFile;
 
@@ -65,7 +65,7 @@ abstract public class LichessClient implements LichessTVWatcher {
     public void followGame(String id) {
         pause(1000);
         try {
-            LichessTVSock client = new LichessTVSock(id,this);
+            LichessTvSock client = new LichessTvSock(id,this);
             if (tvClients.put(id, client) == null) client.connect();
         }
         catch (URISyntaxException e) { log2File(Level.WARNING,"URI Augh: " + e.getMessage()); }
@@ -79,7 +79,7 @@ abstract public class LichessClient implements LichessTVWatcher {
             return true;
         }
         catch (Exception oops) {
-            if (oops instanceof LichessTVLogger.ChariotException) {
+            if (oops instanceof LichessTvLogger.ChariotException) {
                 log2File(Level.WARNING,"Chariot Goof: " + oops.getMessage());
             } else {
                 log2File(Level.WARNING,"Unexpected Exception: " + oops.getMessage());
@@ -96,18 +96,18 @@ abstract public class LichessClient implements LichessTVWatcher {
         }
     }
 
-    public Set<String> loadTV(int n, Enums.Channel channel) throws LichessTVLogger.ChariotException {
+    public Set<String> loadTV(int n, Enums.Channel channel) throws LichessTvLogger.ChariotException {
         Many<Game> games = client.games().byChannel(channel,channelFilter -> channelFilter.nb(n));
         if (games instanceof Fail(int statusCode, var err)) throw
-                new LichessTVLogger.ChariotException(statusCode, "(loadTV) " + err.message());
+                new LichessTvLogger.ChariotException(statusCode, "(loadTV) " + err.message());
         return games.stream().map(Game::id).collect(Collectors.toSet());
     }
 
     public static void updateLogfile() throws IOException {
         String fileName = ZonedDateTime.now(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_DATE) + ".xml";
         if (logFileHandler == null || !logFile.getName().equals(fileName)) {
-            log("Creating new log file: " + fileName);
             logFile = new File("logs/" + fileName);
+            log("Creating new log file: " + logFile.getAbsolutePath());
             if (logFile.exists() && logFile.delete()) log("Deleted old log file: " + fileName);
             if (logFile.exists() || logFile.createNewFile()) {
                 log("Log file created: " + logFile.getAbsolutePath());
@@ -131,8 +131,12 @@ abstract public class LichessClient implements LichessTVWatcher {
         }
     }
 
-    public static void log(String str) { log(str,true); }
-    public static void log(String str, boolean cr) {
-        if (cr) logger.log(Level.INFO,str); else System.out.print(str);
+    public static void log(String str) { log(str,true,false); }
+    public static void log(String str, boolean cr, boolean toFile) {
+        if (cr) {
+            if (toFile) logger.log(Level.INFO,str);
+            else System.out.println(str);
+        }
+        else System.out.print(str);
     }
 }

@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.java_websocket.client.WebSocketClient;
 import java.util.logging.Level;
 
-public class LichessTVLogger extends LichessClient implements Runnable {
-    GameBase gameBase;
+public class LichessTvLogger extends LichessClient implements Runnable {
+    LichessTvBase gameBase;
     String dbUri, dbUsr, dbPwd, dbName;
     boolean logging;
     boolean running = true;
@@ -20,7 +20,7 @@ public class LichessTVLogger extends LichessClient implements Runnable {
 
     public static void main(String[] args) { //throws URISyntaxException, IOException {
         try {
-            new Thread(new LichessTVLogger(args[0],args[1],args[2],args[3])).start();
+            new Thread(new LichessTvLogger(args[0],args[1],args[2],args[3])).start();
         }
         catch (Exception e) {
             log2File(Level.SEVERE,"Zoiks: " + e.getMessage());
@@ -28,20 +28,20 @@ public class LichessTVLogger extends LichessClient implements Runnable {
         }
     }
 
-    public LichessTVLogger(String uri, String usr, String pwd, String db) {
+    public LichessTvLogger(String uri, String usr, String pwd, String db) {
         super("lichess_logger" + (int)(Math.random() * 999));
         dbUri = uri; dbUsr = usr; dbPwd = pwd; dbName = db;
     }
 
     public void reconnectToDB(long pauseTime) {
         pause(pauseTime);
-        gameBase = new GameBase(dbUri,dbUsr,dbPwd,dbName);
+        gameBase = new LichessTvBase(dbUri,dbUsr,dbPwd,dbName);
     }
 
     public void run() {
         try {
             while(running) {
-                gameBase = new GameBase(dbUri,dbUsr,dbPwd,dbName);
+                gameBase = new LichessTvBase(dbUri,dbUsr,dbPwd,dbName);
                 clientID = "lichess_logger" + (int)(Math.random() * 999);
                 client = Client.basic();
                 log2File(Level.INFO,"Starting: " + clientID);
