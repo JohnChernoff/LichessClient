@@ -45,9 +45,9 @@ public class LichessTvWatcher extends Thread {
         listener.streamFinished(getCurrentID(),LichessTvListener.StreamCloseCode.finished, "finished",channel);
     }
 
-    String getCurrentID() {
+    public String getCurrentID() {
         return currentFeatured != null ? currentFeatured.id() : "-";
     }
 
-    TVFeedEvent.Featured getFeatured() { return currentFeatured; }
+    public TVFeedEvent.Featured getFeatured() { return currentFeatured; }
 }
