@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-abstract public class LichessClient implements LichessTvListener {
+abstract public class LichessClient implements LichessTvSockListener {
     public String getClientID() {
         return clientID;
     }

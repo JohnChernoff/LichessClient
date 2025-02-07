@@ -6,7 +6,7 @@
 
     <groupId>org.chernovia</groupId>
     <artifactId>LichessClient</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.7</version>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>

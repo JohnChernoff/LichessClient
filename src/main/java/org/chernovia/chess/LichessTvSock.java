@@ -13,9 +13,9 @@ public class LichessTvSock extends LichessWebSock {
     public static ObjectMapper mapper = new ObjectMapper();
     String id;
     int maxCrowd = 0;
-    LichessTvListener watcher;
+    LichessTvSockListener watcher;
 
-    public LichessTvSock(String id, LichessTvListener watcher) throws URISyntaxException {
+    public LichessTvSock(String id, LichessTvSockListener watcher) throws URISyntaxException {
         super(new URI("wss://socket3.lichess.org/watch/" + id + "/black/v6?sri=" + (int)(Math.random() * 999)));
         this.id = id;
         this.watcher = watcher;

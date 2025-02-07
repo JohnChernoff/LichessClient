@@ -1,10 +1,13 @@
 package org.chernovia.chess;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import chariot.model.Enums;
+import chariot.model.TVFeedEvent;
+import com.github.bhlangonijr.chesslib.move.Move;
 
 public interface LichessTvListener {
-    void gameStarted(String id, JsonNode data);
-    void movePlayed(String id, JsonNode data);
-    void gameOver(String id, JsonNode data);
-    void gameClosed(String id);
+    enum StreamCloseCode {exception,finished,feedFail}
+    public void newMove(TVFeedEvent.Fen fen, Move move, Enums.Channel channel);
+    public void newFeature(TVFeedEvent.Featured formerFeature, TVFeedEvent.Featured newFeature, Enums.Channel channel);
+    public void streamFinished(String lastId, StreamCloseCode closeCode, String reason, Enums.Channel channel);
+
 }
